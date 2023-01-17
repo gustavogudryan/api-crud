@@ -1,13 +1,13 @@
 import { Router, Request, Response} from 'express';
-import { notes, users } from '../data/data';
-import { Note, User } from '../models';
+import { recados, users } from '../data/data';
+import { Recado, User } from '../models';
 
 const router = Router()
 
 router.post("/users", (req: Request, res: Response)=>{
-    const {username, email, password, repassword} = req.body
+    const {name, email, password, repassword} = req.body
 
-    if(!username || !email || !password || !repassword){
+    if(!name || !email || !password || !repassword){
         return res.status(400).json({
             sucess: false,
             message: "Preencha todos os campos",
@@ -26,7 +26,7 @@ router.post("/users", (req: Request, res: Response)=>{
                 message: "Email em uso!",
             })
         }
-        const user = new User(username, email, password)
+        const user = new User(name, email, password, repassword)
 
         users.push(user)
 
@@ -55,7 +55,7 @@ router.post("/users/login", (req: Request, res: Response) =>{
     }
 })
 
-router.post("/users/notes", (req: Request, res: Response) => {
+router.post("/users/recados", (req: Request, res: Response) => {
     const { userEmail, title, description } = req.body;
   
     const existUser = users.some((user) => user.email === userEmail);
@@ -66,41 +66,52 @@ router.post("/users/notes", (req: Request, res: Response) => {
         message: "Sem recados!",
       });
     } else {
-        const note = new Note(userEmail, title, description)
+        const recado = new Recado(userEmail, title, description)
 
-        notes.push(note)
+        recados.push(recado)
 
         return res.status(200).json({
             sucess: true,
-            data: note,
+            data: recado,
         })
     }
   });
 
-  router.get("/users/notes", (req: Request, res: Response) => {
-    const { userEmail } = req.query;
+  router.get("/users", (req: Request, res: Response) =>{
+      const listaUsuarios = users.map((user)=>{
+          return {
+            name: user.name,
+            email: user.email,
+            password: user.password,
+          }
+      });
+      res.status(200).json(listaUsuarios)
+  })
+
+  router.get("/users/recados", (req: Request, res: Response) => {
+    const { userEmail, email } = req.query;
   
-    const existUser = users.some((user) => user.email === userEmail);
+    const existUser = users.some((user) => user.email === email);
     if (!existUser) {
       return res.status(418).json({
         success: false,
         message: "Usuário não encontrado",
       });
     } else {
-      const userNotes = notes.filter((note) => note.userEmail === userEmail);
+      const userRecados = recados.filter((recado) => recado.userEmail === userEmail);
 
       return res.status(200).json({
         success: true,
-        data: userNotes,
+        data: userRecados,
       });
     }
   });
 
-  router.put("/users/notes/:id", (req: Request, res: Response) => {
+  router.put("/users/recados/:id", (req: Request, res: Response) => {
     const { id } = req.params;
     const { title, description } = req.body;
   
-    const indexNote = notes.findIndex((note) => note.id == id);
+    const indexNote = recados.findIndex((recado) => recado.id === id);
 
     if (indexNote == -1) {
       return res.status(418).json({
@@ -109,20 +120,20 @@ router.post("/users/notes", (req: Request, res: Response) => {
       });
     } else {
 
-      notes[indexNote].title = title;
-      notes[indexNote].description = description;
+      recados[indexNote].title = title;
+      recados[indexNote].description = description;
 
       return res.status(200).json({
         success: true,
-        data: notes[indexNote],
+        data: recados[indexNote],
       });
     }
   });
 
-  router.delete("/users/notes/:id", (req: Request, res: Response) => {
+  router.delete("/users/recados/:id", (req: Request, res: Response) => {
     const { id } = req.params;
   
-    const note = notes.find((note) => note.id == id);
+    const note = recados.find((recado) => recado.id === id);
 
     if (!note) {
       return res.status(418).json({
@@ -130,13 +141,13 @@ router.post("/users/notes", (req: Request, res: Response) => {
         message: "Recado não encontrado!",
       });
     } else {
-      const noteIndex = notes.findIndex((f) => f == note);
+      const noteIndex = recados.findIndex((f) => f == note);
 
-      notes.splice(noteIndex, 1);
+      recados.splice(noteIndex, 1);
 
       return res.status(200).json({
         success: true,
-        data: notes,
+        data: recados,
         message: "Recado deletado!",
       });
     }

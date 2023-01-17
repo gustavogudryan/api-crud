@@ -4,7 +4,7 @@ import router from './routes/routes';
 
 const server = express ()
 
-const port = process.env.PORT || 3031
+const port = process.env.PORT || 3001
 
 server.use(express.json(), cors(), router)
 

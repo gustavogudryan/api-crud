@@ -1,25 +1,27 @@
 import { v4 } from "uuid";
 
 export class User {
-    username: string;
+    name: string;
     email: string;
-    password: string
+    password: string;
+    repassword: string;
 
-    constructor(username: string, email: string, password: string){
-        this.username = username;
+    constructor(name: string, email: string, password: string, repassword: string){
+        this.name = name;
         this.email = email;
-        this.password = password
+        this.password = password;
+        this.repassword = repassword;
     }
 }
 
-export class Note {
+export class Recado {
     userEmail: string;
     id: string;
     title: string;
     description: string;
 
     constructor(userEmail: string, title: string, description: string) {
-        this.userEmail = userEmail
+        this.userEmail = userEmail;
         this.id = v4();
         this.title = title;
         this.description = description;

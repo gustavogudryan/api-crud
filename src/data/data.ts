@@ -1,4 +1,4 @@
-import { Note, User } from "../models";
+import { Recado, User } from "../models";
 
 export const users: User[] = []
-export const notes: Note[] = []
+export const recados: Recado[] = []
