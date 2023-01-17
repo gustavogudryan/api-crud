@@ -1,26 +1,11 @@
-import express, { Express } from "express";
-import cors from "cors"
-import { user } from "./services";
-import { validateUser } from "./middlewares/authenticate-user.middleware";
-import { findUserLogin } from "./middlewares/find-user.middleware";
+import express from 'express';
+import cors from 'cors';
+import router from './routes/routes';
 
+const server = express ()
 
+const port = process.env.PORT || 3031
 
-const server: Express = express();
+server.use(express.json(), cors(), router)
 
-server.use(cors());
-
-server.use(express.json())
-
-server.listen(3000, () => {
-    console.log("Server Running");
-})
-
-// USUARIO
-
-server.get("/users", user.getUsers)
-server.get("/users/:id", user.getUserID)
-server.post("/users", validateUser, user.createUser)
-server.post("/users:login", findUserLogin, user.loginUser)
-
-// MENSAGENS
+server.listen(port, () => console.log("Server Working!"));
