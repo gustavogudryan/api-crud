@@ -140,18 +140,18 @@ router.post("/users/recados", (req: Request, res: Response) => {
   router.delete("/users/recados/:id", (req: Request, res: Response) => {
     const { id } = req.params;
   
-    const note = recados.find((recado) => recado.id === id);
+    const recado = recados.find((recado) => recado.id === id);
 
-    if (!note) {
+    if (!recado) {
       return res.status(418).json({
         success: false,
         message: "Recado não encontrado!",
       });
     } else {
       
-      const noteIndex = recados.findIndex((f) => f == note);
+      const recadoIndex = recados.findIndex((f) => f == recado);
 
-      recados.splice(noteIndex, 1);
+      recados.splice(recadoIndex, 1);
 
       return res.status(200).json({
         success: true,
