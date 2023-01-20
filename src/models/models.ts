@@ -17,13 +17,13 @@ export class User {
 export class Recado {
     userEmail: string;
     id: string;
-    title: string;
-    description: string;
+    titulo: string;
+    descricao: string;
 
-    constructor(userEmail: string, title: string, description: string) {
+    constructor(userEmail: string, titulo: string, descricao: string) {
         this.userEmail = userEmail;
         this.id = v4();
-        this.title = title;
-        this.description = description;
+        this.titulo = titulo;
+        this.descricao = descricao;
     }
 }

@@ -31,6 +31,7 @@ router.post("/users", (req: Request, res: Response)=>{
         users.push(user)
 
         return res.status(200).json({
+            message: "Conta criada com sucesso!",
             sucess: true,
             data: user,
         })
@@ -56,7 +57,7 @@ router.post("/users/login", (req: Request, res: Response) =>{
 })
 
 router.post("/users/recados", (req: Request, res: Response) => {
-    const { userEmail, title, description } = req.body;
+    const { userEmail, titulo, descricao } = req.body;
   
     const existUser = users.some((user) => user.email === userEmail);
   
@@ -65,8 +66,13 @@ router.post("/users/recados", (req: Request, res: Response) => {
         success: false,
         message: "Sem recados!",
       });
+    } else if(!titulo || !descricao){
+      return res.status(401).json({
+        success: false,
+        message: "Informe os campos!",
+      });
     } else {
-        const recado = new Recado(userEmail, title, description)
+        const recado = new Recado(userEmail, titulo, descricao)
 
         recados.push(recado)
 
@@ -89,9 +95,10 @@ router.post("/users/recados", (req: Request, res: Response) => {
   })
 
   router.get("/users/recados", (req: Request, res: Response) => {
-    const { userEmail, email } = req.query;
+    const { userEmail} = req.query;
   
-    const existUser = users.some((user) => user.email === email);
+    const existUser = users.some((user) => user.email === userEmail);
+
     if (!existUser) {
       return res.status(418).json({
         success: false,
@@ -109,7 +116,7 @@ router.post("/users/recados", (req: Request, res: Response) => {
 
   router.put("/users/recados/:id", (req: Request, res: Response) => {
     const { id } = req.params;
-    const { title, description } = req.body;
+    const { titulo, descricao } = req.body;
   
     const indexNote = recados.findIndex((recado) => recado.id === id);
 
@@ -120,8 +127,8 @@ router.post("/users/recados", (req: Request, res: Response) => {
       });
     } else {
 
-      recados[indexNote].title = title;
-      recados[indexNote].description = description;
+      recados[indexNote].titulo = titulo;
+      recados[indexNote].descricao = descricao;
 
       return res.status(200).json({
         success: true,
@@ -141,6 +148,7 @@ router.post("/users/recados", (req: Request, res: Response) => {
         message: "Recado não encontrado!",
       });
     } else {
+      
       const noteIndex = recados.findIndex((f) => f == note);
 
       recados.splice(noteIndex, 1);
